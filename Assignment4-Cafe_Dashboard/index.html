@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Cafe Destination</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+<div class="logo">
+<img src="images/logo.png" alt="Cafe Destination">
+</div>
+
+<ul class="nav-links">
+<li onclick="scrollHome()">Home</li>
+<li onclick="scrollMenu()">Menu</li>
+<li onclick="scrollDashboard()">Dashboard</li>
+<li onclick="scrollAbout()">About</li>
+<li>Rewards</li>
+<li onclick="scrollGift()">Gift Cards</li>
+</ul>
+
+<div class="nav-right">
+
+<button class="login">Sign in</button>
+
+<div class="cart-btn" onclick="toggleCart()">
+🛒 <span id="cart-count">0</span>
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<div class="hero-text">
+
+<h1>Fresh Coffee Everyday</h1>
+
+<p>Experience premium coffee & desserts</p>
+
+<button onclick="scrollMenu()">Explore Menu</button>
+
+</div>
+
+<div class="hero-img">
+
+<img src="images/hero2.png">
+
+</div>
+
+</section>
+
+<!--ABOUT-->
+<section id="about-section" class="about-section">
+
+<div class="about-container">
+
+<div class="about-text">
+
+<h2>About Cafe Destination</h2>
+
+<p>
+Cafe Destination is a place where coffee lovers gather to enjoy
+freshly brewed coffee, delicious desserts, and a cozy atmosphere.
+Our mission is to create the perfect coffee experience for everyone.
+</p>
+
+<p>
+From rich espresso drinks to handcrafted pastries, we bring
+premium ingredients and passion together in every cup.
+Whether you're here to relax, work, or meet friends,
+Cafe Destination is your perfect coffee stop.
+</p>
+
+</div>
+
+<div class="about-image">
+
+<img src="images/about.jpg">
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- MENU -->
+
+<section id="menu-section" class="menu">
+
+<h2>Our Menu</h2>
+
+<div class="product-grid">
+
+
+<div class="product" onclick="openProduct('Cappuccino',120,'images/cappichino.png')">
+
+<img src="images/cappichino.png">
+
+<h3>Cappuccino</h3>
+
+<p>₹120</p>
+
+</div>
+
+
+<div class="product" onclick="openProduct('Cold Coffee',150,'images/cold coffee.jpg')">
+
+<img src="images/cold coffee.jpg">
+
+<h3>Cold Coffee</h3>
+
+<p>₹150</p>
+
+</div>
+
+
+<div class="product" onclick="openProduct('Chocolate Cake',200,'images/choclate shake.jpg')">
+
+<img src="images/choclate shake.jpg">
+
+<h3>Chocolate Cake</h3>
+
+<p>₹200</p>
+
+</div>
+
+
+<div class="product" onclick="openProduct('Sandwich',180,'images/sandwich.jpg')">
+
+<img src="images/sandwich.jpg">
+
+<h3>Sandwich</h3>
+
+<p>₹180</p>
+
+</div>
+
+
+<div class="product" onclick="openProduct('Latte',160,'images/latte.jpg')">
+
+<img src="images/latte.jpg">
+
+<h3>Latte</h3>
+
+<p>₹160</p>
+
+</div>
+
+
+
+<div class="product" onclick="openProduct('Burger',300,'images/burger.png')">
+
+<img src="images/burger.png">
+
+<h3>Burger & Fries</h3>
+
+<p>₹300</p>
+
+</div>
+
+<div class="product" onclick="openProduct('Tea',150,'images/Bun-muska.png')">
+
+<img src="images/Bun-muska.png">
+
+<h3>Tea</h3>
+
+<p>₹150</p>
+
+</div>
+
+
+<div class="product" onclick="openProduct('Pastry',99,'images/pastry.png')">
+
+<img src="images/pastry.png">
+
+<h3>Pastry</h3>
+
+<p>₹99</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+<!-- GIFT CARD SECTION-->
+<section id="gift-section" class="gift-section">
+
+<h2>Gift Cards</h2>
+
+<div class="gift-grid">
+
+<div class="gift-card">
+<img src="images/gift.png">
+<h3>Cafe Gift Card</h3>
+<p>Flat 10% OFF</p>
+<button>Buy Now</button>
+</div>
+
+<div class="gift-card">
+<img src="images/gift.png">
+<h3>Coffee Lovers Card</h3>
+<p>Get ₹500 Reward</p>
+<button>Buy Now</button>
+</div>
+
+<div class="gift-card">
+<img src="images/gift.png">
+<h3>Premium Cafe Voucher</h3>
+<p>Flat 8% OFF</p>
+<button>Buy Now</button>
+</div>
+
+<div class="gift-card">
+<img src="images/gift.png">
+<h3>Dessert Combo Card</h3>
+<p>Save upto ₹300</p>
+<button>Buy Now</button>
+</div>
+
+</div>
+
+</section> 
+
+
+
+<!-- DASHBOARD SECTION -->
+
+<section id="dashboard-section" class="dashboard-section">
+
+<h2>Cafe Insights</h2>
+
+<div class="dashboard-grid">
+
+<div class="chart-container">
+<canvas id="salesChart"></canvas>
+</div>
+
+<div class="chart-container">
+<canvas id="popularItemsChart"></canvas>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCT POPUP -->
+
+<div id="product-modal" class="modal">
+
+<div class="modal-content">
+
+<span onclick="closeModal()" class="close">&times;</span>
+
+<img id="modal-img">
+
+<h2 id="modal-name"></h2>
+
+<p>Price ₹<span id="modal-price"></span></p>
+
+<button onclick="addToCart()">Add to Cart</button>
+
+</div>
+
+</div>
+
+
+
+<!-- CART PANEL -->
+
+<div id="cart-panel" class="cart-panel">
+
+<div class="cart-header">
+<h2>Your Cart</h2>
+<span class="close-cart" onclick="toggleCart()">✖</span>
+</div>
+
+<ul id="cart-items"></ul>
+
+<h3>Total ₹<span id="total">0</span></h3>
+
+<button onclick="checkout()">Checkout</button>
+
+</div>
+
+
+
+<!-- PAYMENT -->
+
+<div id="payment" class="payment">
+
+<div class="payment-header">
+
+<h2>Payment</h2>
+
+<span class="close-payment" onclick="closePayment()">✖</span>
+
+</div>
+
+<select id="payment-method">
+
+<option>UPI</option>
+<option>Credit Card</option>
+<option>Cash</option>
+
+</select>
+
+<br><br>
+
+<button onclick="placeOrder()">Place Order</button>
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<div class="footer-grid">
+
+<div>
+<h4>About</h4>
+<p>Our Coffee</p>
+<p>Story</p>
+</div>
+
+<div>
+<h4>Careers</h4>
+<p>Culture</p>
+<p>Jobs</p>
+</div>
+
+<div>
+<h4>Impact</h4>
+<p>Sustainability</p>
+<p>Communities</p>
+</div>
+
+<div>
+<h4>Order</h4>
+<p>Delivery</p>
+<p>Pickup</p>
+</div>
+
+</div>
+
+<p class="copyright">
+© 2026 Cafe Destination
+</p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
