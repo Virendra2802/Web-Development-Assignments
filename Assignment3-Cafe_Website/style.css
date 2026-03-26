@@ -1,0 +1,308 @@
+body{
+margin:0;
+font-family:Arial;
+
+background-image:url("images/background.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:rgb(248, 216, 216);
+border-bottom:1px solid #ddd;
+}
+
+.nav-links{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+.nav-links li{
+cursor:pointer;
+font-weight:bold;
+}
+
+.logo img{
+height:45px;
+border-radius: 50px;
+width:auto;
+}
+
+.nav-right{
+display:flex;
+gap:15px;
+}
+
+.login{
+padding:8px 15px;
+border:1px solid black;
+background:rgb(130, 196, 228);
+cursor:pointer;
+border-radius:50px;
+font-weight:bold;
+}
+
+.cart-btn{
+background:#1e3828;
+color:white;
+padding:8px 15px;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold;
+}
+/* HERO */
+
+.hero{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:60px;
+background:rgba(0,0,0,0.4);
+color:white;
+border-radius:10px;
+}
+
+.hero img{
+width:450px;
+border-radius:10px;
+}
+
+.hero button{
+padding:12px 25px;
+background:white;
+border:none;
+cursor:pointer;
+font-weight:bold;
+}
+
+/*About */
+.about-section{
+padding:70px;
+}
+
+.about-container{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:60px;
+}
+
+.about-text{
+max-width:500px;
+}
+
+.about-text h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.about-text p{
+line-height:1.6;
+color:#f8eeee;
+}
+
+.about-image img{
+width:420px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+
+/* MENU */
+
+.menu{
+padding:50px;
+color: grey;
+text-align:center;
+}
+
+.product-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+margin-top:30px;
+}
+
+.product{
+background:white;
+padding:15px;
+border-radius:10px;
+cursor:pointer;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.product img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.product button{
+background:#1e3932;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.product button:hover{
+background:#2e554c;
+transform:scale(1.05);
+transition:0.3s;
+}
+
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+}
+
+.modal-content{
+background:white;
+width:400px;
+margin:120px auto;
+padding:20px;
+text-align:center;
+border-radius:10px;
+}
+
+.modal img{
+width:100%;
+}
+
+.close{
+float:right;
+font-size:25px;
+cursor:pointer;
+}
+
+/* CART */
+
+.cart-panel{
+position:fixed;
+right:0;
+top:0;
+width:300px;
+height:100%;
+background:rgb(246, 240, 240);
+padding:20px;
+box-shadow:-3px 0 10px rgba(0,0,0,0.2);
+display:none;
+}
+.cart-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.close-cart{
+cursor:pointer;
+font-size:20px;
+font-weight:bold;
+}
+
+/* PAYMENT */
+
+.payment{
+display:none;
+position:fixed;
+top:30%;
+left:40%;
+background:white;
+padding:30px;
+box-shadow:0 0 10px black;
+}
+
+.payment-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.close-payment{
+cursor:pointer;
+font-size:20px;
+font-weight:bold;
+}
+
+/* FOOTER */
+
+footer{
+background:#aca8a8;
+padding:40px;
+margin-top:50px;
+}
+
+.footer-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.gift-section{
+padding:60px;
+color:grey;
+text-align:center;
+}
+
+.gift-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+margin-top:30px;
+}
+
+.gift-card{
+background:white;
+border-radius:15px;
+padding:15px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.gift-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.gift-card button{
+margin-top:10px;
+padding:10px 20px;
+background:#1e3932;
+color:white;
+border:none;
+border-radius:25px;
+cursor:pointer;
+}
+
+.gift-card:hover{
+transform:translateY(-8px);
+transition:0.3s;
+}
+
+.product:hover{
+transform:translateY(-8px);
+transition:0.3s;
+}
