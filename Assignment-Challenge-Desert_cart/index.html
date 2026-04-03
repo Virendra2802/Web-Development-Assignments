@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desserts Shop</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Desserts</h1>
+
+<div class="container">
+
+  <!-- PRODUCTS -->
+  <div class="products">
+
+    <div class="card" data-name="Waffle with Berries" data-price="6.5">
+      <img src="assets\images\image-waffle-mobile.jpg">
+      <h3>Waffle</h3>
+      <h2>Waffle with Berries</h2>
+      <p class="price">$6.50</p>
+      <button class="btn">Add to Cart</button>
+    </div>
+
+    <div class="card" data-name="Crème Brûlée" data-price="7">
+      <img src="assets\images\image-creme-brulee-mobile.jpg">
+      <h3>Crème Brûlée</h3>
+      <h2>Vanilla Bean Crème Brûlée</h2>
+      <p class="price">$7.00</p>
+      <button class="btn">Add to Cart</button>
+    </div>
+
+    <div class="card" data-name="Macaron" data-price="8">
+      <img src="assets\images\image-macaron-mobile.jpg">
+      <h3>Macaron</h3>
+      <h2>Macaron Mix of Five</h2>
+      <p class="price">$8.00</p>
+      <button class="btn">Add to Cart</button>
+    </div>
+
+    <div class="card" data-name="Classic Tiramisu" data-price="8">
+      <img src="assets\images\image-tiramisu-mobile.jpg">
+      <h3>Tiramisu</h3>
+      <h2>Classic Tiramisu</h2>
+      <p class="price">$8.00</p>
+      <button class="btn">Add to Cart</button>
+    </div>
+   
+    <div class="card" data-name="Pistachio Baklava" data-price="8">
+      <img src="assets\images\image-baklava-mobile.jpg">
+      <h3>Pistachio Baklava</h3>
+      <h2>Pistachio Baklava</h2>
+      <p class="price">$8.00</p>
+      <button class="btn">Add to Cart</button>
+    </div> 
+    
+    <div class="card" data-name="Lemon Meringue" data-price="7.5">
+        <img src="assets\images\image-meringue-mobile.jpg">
+        <h3>Lemon Meringue</h3>
+        <h2>Lemon Meringue</h2>
+        <p class="price">$7.50</p>
+        <button class="btn">Add to Cart</button>
+    </div>
+
+    <div class="card" data-name="Panna Cotta" data-price="7.5">
+        <img src="assets\images\image-panna-cotta-mobile.jpg">
+        <h3>Panna Cotta</h3>
+        <h2>Panna Cotta</h2>
+        <p class="price">$7.50</p>
+        <button class="btn">Add to Cart</button>
+    </div>
+  
+      <div class="card" data-name="Chocolate Cake" data-price="7.5">
+        <img src="assets\images\image-cake-mobile.jpg">
+        <h3>Chocolate Cake</h3>
+        <h2>Red Velvet Cake</h2>
+        <p class="price">$7.50</p>
+        <button class="btn">Add to Cart</button>
+    </div>
+    <div class="card" data-name="Brownie" data-price="7.5">
+        <img src="assets\images\image-brownie-mobile.jpg">
+        <h3>Brownie</h3>
+        <h2>Salted Caramel Browniee</h2>
+        <p class="price">$7.50</p>
+        <button class="btn">Add to Cart</button>
+    </div>
+
+  </div>
+
+  <!-- CART -->
+  <div class="cart">
+    <h2>Your Cart (<span id="count">0</span>)</h2>
+
+    <div id="cart-items">
+      <p class="empty">Your added items will appear here</p>
+    </div>
+
+    <div class="total">Total: $<span id="total">0.00</span></div>
+
+    <button class="checkout">Confirm Order</button>
+    <button class="reset">Start New Order</button>
+  </div>
+
+</div>
+
+<div id="order-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-content">
+    <div class="modal-check">✔</div>
+    <h3 id="modal-title">Order Confirmed</h3>
+    <p id="modal-message">We hope you enjoy your food</p>
+
+    <h4>Order details</h4>
+    <div id="modal-order-list" class="modal-order-list"></div>
+    <div id="modal-order-total" class="modal-order-total"></div>
+
+    <button id="close-modal">Close</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
