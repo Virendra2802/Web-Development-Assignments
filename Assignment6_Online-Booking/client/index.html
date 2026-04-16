@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeEase | Premium Home Services Booking</title>
+    <meta name="description" content="Book professional electricians, plumbers, cleaners, and AC repair technicians instantly. Trusted home services at your doorstep.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <header id="header">
+        <div class="logo">
+            <i data-lucide="home"></i>
+            <span>HomeEase</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="#bookings" id="view-bookings-btn">My Bookings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content fade-in">
+                <h1>Professional help, <br><span style="color: var(--primary)">exactly when</span> you need it.</h1>
+                <p>Book top-rated professionals for all your home needs. Transparent pricing. Verified experts.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#services" class="btn btn-primary">Book a Service <i data-lucide="arrow-right"></i></a>
+                    <button class="btn" style="background: white;">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services-section" id="services">
+            <div class="fade-in">
+                <h2>Our Services</h2>
+                <p style="color: var(--text-light)">Highest rated professionals in your area</p>
+            </div>
+            <div class="services-grid" id="services-container">
+                <!-- Services will be loaded here dynamically -->
+                 <div class="service-card loading">
+                    <p>Loading services...</p>
+                 </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section style="padding: 100px 10%; background: #fff;" id="how-it-works">
+            <h2 style="text-align: center; margin-bottom: 4rem;">How HomeEase Works</h2>
+            <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 1.5rem;">1</div>
+                    <h3>Choose Service</h3>
+                    <p>Select from our range of professional home services.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 1.5rem;">2</div>
+                    <h3>Pick a Slot</h3>
+                    <p>Choose a date and time that works best for you.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div class="service-icon" style="margin: 0 auto 1.5rem;">3</div>
+                    <h3>Rest Easy</h3>
+                    <p>Our expert will arrive at your doorstep and get the job done.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal">
+            <span class="close-modal" id="close-modal"><i data-lucide="x"></i></span>
+            <h2 id="modal-title">Book Service</h2>
+            <p id="modal-service-name" style="color: var(--primary); font-weight: 600;"></p>
+            
+            <form class="booking-form" id="booking-form">
+                <input type="hidden" id="service-id-input">
+                <input type="hidden" id="service-price-input">
+                
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="user-name" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="user-email" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="user-phone" placeholder="+1 234 567 890" required>
+                </div>
+                <div class="form-group">
+                    <label>Service Date</label>
+                    <input type="date" id="booking-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Time</label>
+                    <select id="booking-time" required>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="04:00 PM">04:00 PM</option>
+                        <option value="06:00 PM">06:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Address</label>
+                    <textarea id="user-address" rows="3" placeholder="Enter your full address" required></textarea>
+                </div>
+                
+                <div class="form-group full">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Confirm Booking</button>
+                </div>
+            </form>
+
+            <!-- Success State -->
+            <div id="booking-success" style="display: none;" class="success-msg">
+                <i data-lucide="check-circle" class="success-icon"></i>
+                <h3>Booking Confirmed!</h3>
+                <p>We've sent the details to your email. Our professional will contact you soon.</p>
+                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="location.reload()">Great!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bookings View Modal -->
+    <div class="modal-overlay" id="view-bookings-modal">
+        <div class="modal" style="max-width: 800px;">
+            <span class="close-modal" id="close-bookings-modal"><i data-lucide="x"></i></span>
+            <h2>My Bookings</h2>
+            <div id="bookings-list" style="margin-top: 2rem; max-height: 400px; overflow-y: auto;">
+                <p>No bookings found.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer style="padding: 50px 10%; background: var(--text); color: white; text-align: center;">
+        <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
+            <i data-lucide="home"></i>
+            <span style="color: white;">HomeEase</span>
+        </div>
+        <p style="color: #94a3b8;">&copy; 2026 HomeEase Home Services. All rights reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
