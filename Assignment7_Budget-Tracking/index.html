@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Axia Finance | AI-Powered Finance Dashboard</title>
+  <meta name="description" content="Axia Finance — Your AI-powered personal finance dashboard. Track budgets, investments, and get smart financial insights in real time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ONBOARDING MODAL -->
+<div id="onboardingModal" class="modal-overlay" role="dialog" aria-modal="true" style="display:none;z-index:9999;">
+  <div class="modal-box glassmorphism" style="max-width:480px;text-align:center;">
+    <div class="modal-logo" style="font-size:40px;margin-bottom:20px;">✦</div>
+    <h2 class="modal-title" style="font-size:24px;margin-bottom:10px;">Welcome to Axia!</h2>
+    <p style="color:var(--text-secondary);margin-bottom:24px;">Let's get your dashboard ready. What is your current bank balance?</p>
+    <form id="onboardingForm">
+      <div class="form-group" style="text-align:left;">
+        <label>Initial Balance (₹)</label>
+        <div class="input-wrapper">
+          <span class="input-prefix">₹</span>
+          <input type="number" id="initBalance" placeholder="50000" min="0" required style="width:100%;" />
+        </div>
+      </div>
+      <div class="form-group" style="text-align:left; margin-top:16px;">
+        <label>Monthly Budget (₹)</label>
+        <div class="input-wrapper">
+          <span class="input-prefix">₹</span>
+          <input type="number" id="initBudget" placeholder="25000" min="0" required style="width:100%;" />
+        </div>
+      </div>
+      <button type="submit" class="btn-primary w-full" style="margin-top:20px;">
+        <span>Start My Journey</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- SET BUDGETS MODAL -->
+<div id="setBudgetsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Set Budgets Modal">
+  <div class="modal-box glassmorphism" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 class="modal-title">📊 Set Monthly Budgets</h2>
+      <button id="closeBudgetsModal" class="modal-close" aria-label="Close modal">✕</button>
+    </div>
+    <form id="setBudgetsForm" class="expense-form" autocomplete="off">
+      <p style="color:var(--text-secondary); margin-bottom:15px; font-size:14px;">Define exact limits for each category. These power your insights.</p>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom: 24px;">
+        <div class="form-group"><label>🛒 Groceries</label><input class="form-input" type="number" id="bud-groceries" placeholder="0" min="0"></div>
+        <div class="form-group"><label>🏠 Rent & Housing</label><input class="form-input" type="number" id="bud-rent" placeholder="0" min="0"></div>
+        <div class="form-group"><label>🎬 Entertainment</label><input class="form-input" type="number" id="bud-entertainment" placeholder="0" min="0"></div>
+        <div class="form-group"><label>🍽️ Dining Out</label><input class="form-input" type="number" id="bud-dining" placeholder="0" min="0"></div>
+        <div class="form-group"><label>🚗 Transport</label><input class="form-input" type="number" id="bud-transport" placeholder="0" min="0"></div>
+        <div class="form-group"><label>💊 Health & Fitness</label><input class="form-input" type="number" id="bud-health" placeholder="0" min="0"></div>
+        <div class="form-group"><label>⚡ Utilities</label><input class="form-input" type="number" id="bud-utilities" placeholder="0" min="0"></div>
+        <div class="form-group"><label>🛍️ Shopping</label><input class="form-input" type="number" id="bud-shopping" placeholder="0" min="0"></div>
+      </div>
+      <button type="submit" class="btn-primary w-full">Save Specific Budgets →</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADD EXPENSE MODAL -->
+<div id="addExpenseModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Add Expense Modal">
+  <div class="modal-box glassmorphism">
+    <div class="modal-header">
+      <h2 class="modal-title">➕ Add Expense</h2>
+      <button id="closeModal" class="modal-close" aria-label="Close modal">✕</button>
+    </div>
+    <form id="addExpenseForm" class="expense-form" autocomplete="off">
+      <div class="form-group">
+        <label for="expAmount">Amount (₹)</label>
+        <div class="input-wrapper">
+          <span class="input-prefix">₹</span>
+          <input type="number" id="expAmount" name="expAmount" placeholder="0.00" min="0" step="0.01" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="expCategory">Category <span class="ai-badge">✦ AI-Predictive</span></label>
+        <div class="input-wrapper select-wrapper">
+          <select id="expCategory" name="expCategory" required>
+            <option value="">Select category…</option>
+            <option value="groceries">🛒 Groceries</option>
+            <option value="rent">🏠 Rent & Housing</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="dining">🍽️ Dining Out</option>
+            <option value="transport">🚗 Transport</option>
+            <option value="health">💊 Health & Fitness</option>
+            <option value="shopping">🛍️ Shopping</option>
+            <option value="utilities">⚡ Utilities</option>
+          </select>
+          <span class="ai-predict-indicator" id="aiCategoryHint"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="expDesc">Description</label>
+        <input type="text" id="expDesc" name="expDesc" placeholder="e.g. Starbucks Coffee" />
+      </div>
+      <div class="form-group">
+        <label for="expDate">Date</label>
+        <input type="date" id="expDate" name="expDate" required />
+      </div>
+      <div class="form-group">
+        <label for="expNote">Note (optional)</label>
+        <textarea id="expNote" name="expNote" rows="2" placeholder="Any note about this expense…"></textarea>
+      </div>
+      <button type="submit" class="btn-primary w-full" id="submitExpense">
+        <span>Save Expense</span>
+        <span class="btn-icon">→</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- PROFILE PANEL -->
+<div id="profilePanel" class="profile-panel glassmorphism" role="dialog" aria-label="Profile Panel">
+  <div class="profile-panel-header">
+    <div class="profile-avatar-lg">AR</div>
+    <div>
+      <div class="profile-name-lg">Alex R.</div>
+      <div class="profile-email">alex@example.com</div>
+    </div>
+    <button id="closeProfile" class="modal-close" aria-label="Close profile">✕</button>
+  </div>
+  <hr class="panel-divider" />
+  <ul class="profile-menu">
+    <li><button class="profile-menu-item"><span>👤</span> Edit Profile</button></li>
+    <li><button class="profile-menu-item"><span>⚙️</span> Settings</button></li>
+    <li><button class="profile-menu-item"><span>🔔</span> Notifications</button></li>
+    <li><button class="profile-menu-item"><span>🛡️</span> Security Center</button></li>
+    <li><button class="profile-menu-item danger"><span>🚪</span> Logout</button></li>
+  </ul>
+  <div class="profile-panel-footer">
+    <span class="badge-encrypted">🔒 End-to-End Encrypted</span>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell" id="appShell">
+
+  <!-- LEFT NAV -->
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Axia Finance</span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Primary navigation">
+      <ul>
+        <li>
+          <a href="#" class="nav-item active" id="nav-dashboard" data-page="dashboard" aria-current="page">
+            <span class="nav-icon">⬡</span>
+            <span class="nav-label">Dashboard</span>
+            <span class="nav-indicator"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" id="nav-budgets" data-page="budgets">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Budgets</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" id="nav-investments" data-page="investments">
+            <span class="nav-icon">📈</span>
+            <span class="nav-label">Investments</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" id="nav-profile" data-page="profile">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile &amp; Settings</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-add-btn-wrap">
+      <button class="btn-add-expense" id="openAddExpense" aria-label="Add new expense">
+        <span class="add-icon">➕</span>
+        <span>Add Expense</span>
+      </button>
+    </div>
+
+    <!-- Collapsible Quick Add -->
+    <div class="quick-add-panel" id="quickAddPanel">
+      <div class="quick-add-header" id="quickAddToggle">
+        <span>⚡ Quick Add</span>
+        <span class="chevron" id="quickChevron">▾</span>
+      </div>
+      <div class="quick-add-body" id="quickAddBody">
+        <div class="quick-add-row">
+          <input type="number" class="quick-input" placeholder="₹ Amount" id="quickAmount" />
+          <select class="quick-select" id="quickCat">
+            <option value="">Category</option>
+            <option>🛒 Groceries</option>
+            <option>🍽️ Dining</option>
+            <option>🚗 Transport</option>
+            <option>🎬 Entertainment</option>
+          </select>
+        </div>
+        <button class="btn-quick-save" id="quickSave">Save →</button>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="openProfile">
+        <div class="avatar">AR</div>
+        <div class="user-info">
+          <span class="user-name">Alex R.</span>
+          <span class="user-role">Premium Member</span>
+        </div>
+        <span class="chevron-right">›</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="mainContent" role="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar" role="banner">
+      <div class="topbar-left">
+        <div class="breadcrumb">
+          <span class="breadcrumb-root">Axia Finance</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+        </div>
+        <div class="topbar-date" id="topbarDate"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search transactions, budgets…" class="search-input" id="globalSearch" />
+        </div>
+        <button class="icon-btn bell-btn" id="bellBtn" aria-label="Notifications">
+          🔔
+          <span class="notification-dot"></span>
+        </button>
+        <div class="topbar-profile" id="topbarProfile" role="button" tabindex="0" aria-label="Open profile">
+          <div class="avatar-sm">AR</div>
+          <span class="topbar-name">Alex R.</span>
+          <span class="topbar-chevron">▾</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page-content" id="page-dashboard">
+
+      <!-- ROW 1: Welcome + Balance + Health -->
+      <section class="grid-row row-top" aria-label="Account overview">
+
+        <!-- Welcome & Balance Card -->
+        <div class="card card-welcome glassmorphism" id="welcomeCard">
+          <div class="welcome-text">
+            <div class="welcome-greeting">Welcome Back, Alex! 👋</div>
+            <div class="welcome-subtitle">Account Holder: <strong>Alex R.</strong></div>
+            <div class="balance-label">Current Bank Balance</div>
+            <div class="balance-amount" id="balanceAmount">₹ 0<span class="balance-decimal">.00</span></div>
+            <div class="balance-change positive">
+              <span class="change-arrow">↑</span> +₹ 2,340 this month
+            </div>
+          </div>
+          <div class="welcome-chart-mini">
+            <canvas id="miniSparkline" width="120" height="60" aria-label="Balance sparkline"></canvas>
+          </div>
+        </div>
+
+        <!-- Health Score Card -->
+        <div class="card card-health glassmorphism" id="healthCard">
+          <div class="health-header">
+            <span class="health-title">Financial Health Score</span>
+            <span class="health-badge">Excellent</span>
+          </div>
+          <div class="health-gauge-wrap">
+            <canvas id="healthGauge" width="160" height="90" aria-label="Health score gauge"></canvas>
+            <div class="gauge-value">85</div>
+            <div class="gauge-label">/100</div>
+          </div>
+          <div class="health-stats">
+            <div class="health-stat"><span class="hs-label">Savings Rate</span><span class="hs-value positive">28%</span></div>
+            <div class="health-stat"><span class="hs-label">Debt Ratio</span><span class="hs-value">12%</span></div>
+            <div class="health-stat"><span class="hs-label">Goals On Track</span><span class="hs-value positive">3/4</span></div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card card-stats glassmorphism" id="statsCard">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-icon icon-income">↑</div>
+              <div class="stat-info">
+                <div class="stat-label">Monthly Income</div>
+                <div class="stat-value">₹ 72,000</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon icon-expense">↓</div>
+              <div class="stat-info">
+                <div class="stat-label">Monthly Spend</div>
+                <div class="stat-value">₹ 26,330</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon icon-savings">✦</div>
+              <div class="stat-info">
+                <div class="stat-label">Net Savings</div>
+                <div class="stat-value positive">₹ 45,670</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon icon-invest">◈</div>
+              <div class="stat-info">
+                <div class="stat-label">Investments</div>
+                <div class="stat-value">₹ 1,20,000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ROW 2: Spending Chart + AI Tips -->
+      <section class="grid-row row-mid" aria-label="Spending analysis">
+
+        <!-- Monthly Spending Summary Chart -->
+        <div class="card card-chart glassmorphism" id="spendingCard">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Monthly Spending Summary</div>
+              <div class="card-subtitle">Segmented by category • AI Trend overlay</div>
+            </div>
+            <div class="chart-controls">
+              <button class="chart-btn active" data-period="6m">6M</button>
+              <button class="chart-btn" data-period="3m">3M</button>
+              <button class="chart-btn" data-period="1m">1M</button>
+              <span class="ai-live-badge">✦ AI Forecast</span>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="spendingChart" aria-label="Monthly spending bar chart"></canvas>
+          </div>
+          <div class="chart-legend" id="chartLegend">
+            <span class="legend-item"><span class="legend-dot" style="background:#22d3ee"></span>Groceries</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#6366f1"></span>Rent</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Entertainment</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Dining</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Transport</span>
+            <span class="legend-item"><span class="legend-dot legend-dot-dash" style="background:#facc15"></span>AI Trend</span>
+          </div>
+        </div>
+
+        <!-- AI Financial Tips -->
+        <div class="card card-tips glassmorphism" id="tipsCard">
+          <div class="card-header">
+            <div class="card-title">✦ AI Financial Tips</div>
+            <span class="refresh-btn" id="refreshTips" title="Refresh tips">↻</span>
+          </div>
+          <div class="tips-list" id="tipsList">
+            <div class="tip-card tip-green">
+              <div class="tip-icon">📉</div>
+              <div class="tip-body">
+                <div class="tip-type">AI Insight</div>
+                <div class="tip-text">Your dining spend is <strong>15% lower</strong> than last month — keep it up!</div>
+              </div>
+            </div>
+            <div class="tip-card tip-blue">
+              <div class="tip-icon">💡</div>
+              <div class="tip-body">
+                <div class="tip-type">Optimization Tip</div>
+                <div class="tip-text">Moving <strong>₹500 to savings</strong> now will secure your 'New Car' goal 3 weeks early.</div>
+              </div>
+            </div>
+            <div class="tip-card tip-amber">
+              <div class="tip-icon">⚠️</div>
+              <div class="tip-body">
+                <div class="tip-type">Budget Alert</div>
+                <div class="tip-text">Entertainment budget is <strong>78% used</strong>. Limit 2 more outings this month.</div>
+              </div>
+            </div>
+            <div class="tip-card tip-purple">
+              <div class="tip-icon">🎯</div>
+              <div class="tip-body">
+                <div class="tip-type">Goal Forecast</div>
+                <div class="tip-text">At current rate, you'll reach your <strong>Emergency Fund goal</strong> in 6 weeks.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ROW 3: Transaction Feed -->
+      <section class="grid-row row-bottom" aria-label="Transactions">
+        <div class="card card-transactions glassmorphism" id="txCard">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Transaction Intelligence Feed</div>
+              <div class="card-subtitle">Powered by Axia AI • Real-time categorization</div>
+            </div>
+            <div class="tx-controls">
+              <select class="filter-select" id="txFilter" aria-label="Filter transactions">
+                <option value="all">All Categories</option>
+                <option value="groceries">Groceries</option>
+                <option value="dining">Dining</option>
+                <option value="transport">Transport</option>
+                <option value="entertainment">Entertainment</option>
+              </select>
+              <button class="icon-btn" id="exportBtn" aria-label="Export transactions">⤓ Export</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="tx-table" role="table" aria-label="Transaction history">
+              <thead>
+                <tr>
+                  <th scope="col">Description</th>
+                  <th scope="col">Category</th>
+                  <th scope="col" id="sortDate" class="sortable">Date ↕</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">AI Confidence</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="txBody">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div class="tx-pagination">
+            <button class="page-btn" id="prevPage" disabled>← Prev</button>
+            <span class="page-info" id="pageInfo">Page 1 of 3</span>
+            <button class="page-btn" id="nextPage">Next →</button>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /page-dashboard -->
+
+    <!-- BUDGETS PAGE -->
+    <div class="page-content hidden" id="page-budgets">
+      <div class="page-hero" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h1 class="page-title">Smart Budgets</h1>
+          <p class="page-desc">Tracking manually against your specific targets</p>
+        </div>
+        <button class="btn-primary" id="openBudgetsBtn" style="height: fit-content;">Update Budgets</button>
+      </div>
+      <div class="budgets-grid" id="budgetsGrid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <!-- INVESTMENTS PAGE -->
+    <div class="page-content hidden" id="page-investments">
+      <div class="page-hero">
+        <h1 class="page-title">Investments</h1>
+        <p class="page-desc">AI-tracked portfolio performance &amp; allocation</p>
+      </div>
+      <div class="investments-grid">
+
+        <!-- Portfolio Donut -->
+        <div class="card glassmorphism inv-card" id="invPortfolio">
+          <div class="card-title">Portfolio Overview</div>
+          <div class="inv-chart-wrap">
+            <canvas id="portfolioChart" aria-label="Investment portfolio donut chart"></canvas>
+          </div>
+          <div class="inv-portfolio-total" id="invTotal">
+            <div class="inv-total-label">Total Invested</div>
+            <div class="inv-total-value">₹ 1,20,000</div>
+            <div class="inv-total-change">↑ +12.4% all time</div>
+          </div>
+          <div class="inv-legend" id="invLegend"></div>
+        </div>
+
+        <!-- Performance Line -->
+        <div class="card glassmorphism inv-card" id="invPerf">
+          <div class="inv-perf-header">
+            <div class="card-title">Performance Trend</div>
+            <div class="inv-period-btns" id="invPeriodBtns">
+              <button class="inv-period-btn" data-period="3m">3M</button>
+              <button class="inv-period-btn" data-period="6m">6M</button>
+              <button class="inv-period-btn active" data-period="1y">1Y</button>
+            </div>
+          </div>
+          <div class="inv-perf-stats">
+            <div class="inv-perf-stat">
+              <span class="inv-perf-label">Current Value</span>
+              <span class="inv-perf-value">₹ 1,20,000</span>
+            </div>
+            <div class="inv-perf-stat">
+              <span class="inv-perf-label">Total Return</span>
+              <span class="inv-perf-value up">+₹ 22,000</span>
+            </div>
+            <div class="inv-perf-stat">
+              <span class="inv-perf-label">XIRR</span>
+              <span class="inv-perf-value up">+18.3%</span>
+            </div>
+          </div>
+          <div class="inv-chart-wrap">
+            <canvas id="perfChart" aria-label="Investment performance line chart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page-content hidden" id="page-profile">
+      <div class="page-hero">
+        <h1 class="page-title">Profile &amp; Settings</h1>
+        <p class="page-desc">Manage your account and preferences</p>
+      </div>
+      <div class="profile-grid">
+        <div class="card glassmorphism profile-info-card">
+          <div class="profile-avatar-xl">AR</div>
+          <div class="profile-details">
+            <div class="pd-row"><span class="pd-label">Name</span><span class="pd-value">Alex R.</span></div>
+            <div class="pd-row"><span class="pd-label">Email</span><span class="pd-value">alex@example.com</span></div>
+            <div class="pd-row"><span class="pd-label">Member Since</span><span class="pd-value">Jan 2025</span></div>
+            <div class="pd-row"><span class="pd-label">Plan</span><span class="pd-value plan-badge">Premium</span></div>
+          </div>
+          <button class="btn-primary mt-1">Edit Profile</button>
+        </div>
+        <div class="card glassmorphism profile-settings-card">
+          <div class="card-title">Preferences</div>
+          <div class="pref-list">
+            <div class="pref-item">
+              <span>🌙 Dark Mode</span>
+              <label class="toggle"><input type="checkbox" id="toggleDarkMode" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="pref-item">
+              <span>🔔 Push Notifications</span>
+              <label class="toggle"><input type="checkbox" id="toggleNotifications" checked /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="pref-item">
+              <span>🤖 AI Suggestions</span>
+              <label class="toggle"><input type="checkbox" id="toggleAI" checked /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="pref-item">
+              <span>📧 Weekly Reports</span>
+              <label class="toggle"><input type="checkbox" id="toggleReports" /><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT AI COLUMN -->
+  <aside class="right-panel" id="rightPanel" aria-label="AI Alerts and Smart Budgeting">
+
+    <!-- Top 3 AI Alerts -->
+    <section class="rp-section" aria-labelledby="aiAlertsHeading">
+      <div class="rp-header">
+        <h2 class="rp-title" id="aiAlertsHeading">Top 3 AI Alerts</h2>
+        <button class="rp-more" aria-label="More alerts">···</button>
+      </div>
+      <div class="alerts-list" id="alertsList">
+        <!-- Injected dynamically by app.js based on user inputs -->
+      </div>
+    </section>
+
+    <!-- Smart Budgeting -->
+    <section class="rp-section" aria-labelledby="smartBudgetHeading">
+      <div class="rp-header">
+        <h2 class="rp-title" id="smartBudgetHeading">Smart Budgeting</h2>
+        <select class="rp-select" id="budgetWidget" aria-label="Select budget period">
+          <option>This Month</option>
+          <option>Last Month</option>
+          <option>Q1 2026</option>
+        </select>
+      </div>
+      <div class="budget-circles" id="budgetCircles">
+        <!-- Injected by JS -->
+      </div>
+      <div class="ai-rec" id="aiRec">
+        <div class="ai-rec-icon">✦</div>
+        <div class="ai-rec-body">
+          <div class="ai-rec-title">AI Recommendation</div>
+          <div class="ai-rec-text">Reduce dining out by ₹50 to meet your monthly savings goal.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Savings Goals -->
+    <section class="rp-section" aria-labelledby="goalsHeading">
+      <div class="rp-header">
+        <h2 class="rp-title" id="goalsHeading">Savings Goals</h2>
+        <button class="rp-add-goal" id="addGoalBtn" aria-label="Add goal">+</button>
+      </div>
+      <div class="goals-list" id="goalsList">
+        <!-- Injected dynamically by app.js based on custom inputs -->
+      </div>
+    </section>
+
+  </aside>
+
+</div><!-- /app-shell -->
+
+<!-- FOOTER -->
+<footer class="app-footer" role="contentinfo">
+  <span>Axia Finance © 2026</span>
+  <span class="footer-sep">|</span>
+  <span>End-to-End Encrypted</span>
+  <span class="footer-sep">|</span>
+  <a href="#" class="footer-link">AI Transparency</a>
+  <span class="footer-sep">|</span>
+  <a href="#" class="footer-link">Security Center</a>
+</footer>
+
+<!-- TOAST NOTIFICATIONS -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script>
+  // Auth Guard — redirect to login if no token
+  if (!localStorage.getItem('axia_token')) {
+    window.location.href = 'login.html';
+  }
+  // Populate user name from stored data
+  try {
+    const u = JSON.parse(localStorage.getItem('axia_user') || '{}');
+    if (u.name) {
+      document.querySelectorAll('.user-name, .topbar-name, .profile-name-lg').forEach(el => el.textContent = u.name);
+      document.querySelectorAll('.avatar, .avatar-sm, .profile-avatar-lg, .profile-avatar-xl').forEach(el => {
+        el.textContent = u.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      });
+      const welc = document.querySelector('.welcome-greeting');
+      if (welc) welc.textContent = 'Welcome Back, ' + u.name.split(' ')[0] + '! 👋';
+      const sub = document.querySelector('.welcome-subtitle');
+      if (sub) sub.innerHTML = 'Account Holder: <strong>' + u.name + '</strong>';
+      const pemail = document.querySelector('.profile-email');
+      if (pemail) pemail.textContent = u.email || 'alex@example.com';
+    }
+  } catch(e) {}
+</script>
+<script src="app.js"></script>
+<script>
+  // Logout handler — attached after app.js so profile menu items exist
+  document.querySelectorAll('.profile-menu-item').forEach(item => {
+    if (item.textContent.includes('Logout')) {
+      item.addEventListener('click', function(e) {
+        e.stopImmediatePropagation();
+        localStorage.removeItem('axia_token');
+        localStorage.removeItem('axia_user');
+        window.location.href = 'login.html';
+      });
+    }
+  });
+</script>
+
+<form id="loginForm">
+  <input type="email" id="email" required>
+  <input type="password" id="password" required>
+  <button type="submit">Login</button>
+</form>
+
+<script>
+// LOGIN HANDLER (works if login form exists anywhere)
+document.getElementById("loginForm")?.addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email")?.value;
+  const password = document.getElementById("password")?.value;
+
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+      localStorage.setItem("axia_token", data.token);
+      localStorage.setItem("axia_user", JSON.stringify(data.user));
+
+      alert("Login successful ✅");
+
+      // reload same page (dashboard)
+      window.location.href = "index.html";
+    } else {
+      alert(data.msg || "Login failed ❌");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error ❌");
+  }
+});
+</script>
+</body>
+</html>
