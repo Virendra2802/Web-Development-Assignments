@@ -1,0 +1,92 @@
+/*-----------------------------------*\
+  #AUTH PAGES STYLES
+\*-----------------------------------*/
+
+.auth-page {
+  background: var(--white-2);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: var(--white-1);
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: var(--radius-6);
+  box-shadow: 0 10px 40px hsla(0, 0%, 0%, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header .logo {
+  color: var(--viridian-green);
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 3rem;
+}
+
+.auth-title {
+  font-family: var(--ff-abril-fatface);
+  font-size: var(--fs-3);
+  color: var(--oxford-blue);
+}
+
+.auth-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: var(--fs-7);
+  font-weight: var(--fw-600);
+  color: var(--granite-gray);
+}
+
+.form-input {
+  background: var(--white-2);
+  border: 1px solid var(--light-gray);
+  padding: 12px 15px;
+  border-radius: var(--radius-6);
+  font-size: var(--fs-6);
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: var(--viridian-green);
+  outline: none;
+}
+
+.auth-footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: var(--fs-7);
+  color: var(--battleship-gray);
+}
+
+.auth-link {
+  display: inline;
+  color: var(--viridian-green);
+  font-weight: var(--fw-700);
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

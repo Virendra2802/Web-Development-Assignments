@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In - Tourest</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="./assets/auth.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <div class="auth-header">
+      <a href="index.html" class="logo">Tourest</a>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p>Please log in to your account.</p>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="john@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Log In</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <a href="signup.html" class="auth-link">Sign Up</a></p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        Toastify({
+          text: data.message,
+          duration: 3000,
+          backgroundColor: res.ok ? "#118a7e" : "#ff5f6d"
+        }).showToast();
+
+        if (res.ok) {
+          // Store token and user data
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          setTimeout(() => window.location.href = 'index.html', 1500);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
