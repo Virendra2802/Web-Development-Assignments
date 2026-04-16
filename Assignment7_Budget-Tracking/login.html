@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Axia Finance | Login</title>
+  <meta name="description" content="Sign in to your Axia Finance dashboard — AI-powered personal finance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Variables (same design tokens as dashboard) ── */
+    :root {
+      --bg-deep: #ffffff;
+      --bg-card: #ffffff;
+      --bg-input: #f1f5f9;
+      --bg-border: rgba(0,0,0,0.06);
+      --accent-blue: #0056b3;
+      --accent-blue-glow: rgba(0,86,179,0.12);
+      --accent-green: #0a8d63;
+      --accent-cyan: #0096c7;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --glass-bg: rgba(255,255,255,0.75);
+      --glass-border: rgba(0,0,0,0.08);
+      --shadow-card: 0 10px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
+      --shadow-glow-blue: 0 0 16px rgba(0,86,179,0.2);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --font-main: 'Inter', sans-serif;
+      --font-brand: 'Outfit', sans-serif;
+      --trs: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Animated background ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(0,86,179,0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(10,141,99,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 60% 80%, rgba(79,70,229,0.02) 0%, transparent 50%);
+    }
+    .bg-grid::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,86,179,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,86,179,0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: gridDrift 20s linear infinite;
+    }
+    @keyframes gridDrift { 0% { transform: translate(0,0); } 100% { transform: translate(48px,48px); } }
+
+    /* ── Login Container ── */
+    .login-container {
+      position: relative; z-index: 10;
+      display: flex;
+      width: min(960px, 94vw);
+      min-height: 540px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    /* ── Left Branding Panel ── */
+    .login-brand {
+      width: 420px;
+      background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--bg-border);
+    }
+    .login-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 70%, rgba(0,86,179,0.05) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(10,141,99,0.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .brand-top { position: relative; z-index: 1; }
+    .brand-logo {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 36px;
+    }
+    .brand-logo-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-brand);
+      font-weight: 800; font-size: 22px; color: #fff;
+      box-shadow: var(--shadow-glow-blue);
+    }
+    .brand-logo-text {
+      font-family: var(--font-brand);
+      font-size: 20px; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .brand-headline {
+      font-family: var(--font-brand);
+      font-size: 28px; font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      color: var(--accent-blue);
+    }
+    .brand-subtitle {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6; max-width: 320px;
+    }
+
+    .brand-features {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 14px;
+      margin-top: 28px;
+    }
+    .brand-feature {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(0,86,179,0.03);
+      border: 1px solid rgba(0,86,179,0.04);
+      transition: background var(--trs), border-color var(--trs);
+    }
+    .brand-feature:hover { background: rgba(0,86,179,0.06); border-color: rgba(0,86,179,0.15); }
+    .feature-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .fi-blue   { background: rgba(0,86,179,0.1); color: var(--accent-blue); }
+    .fi-green  { background: rgba(10,141,99,0.1); color: var(--accent-green); }
+    .fi-purple { background: rgba(79,70,229,0.1); color: #4f46e5; }
+    .feature-text {
+      font-size: 13px; color: var(--text-secondary);
+    }
+    .feature-text strong { color: var(--text-primary); font-weight: 600; }
+
+    .brand-bottom {
+      position: relative; z-index: 1;
+      font-size: 11px; color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    /* ── Right Form Panel ── */
+    .login-form-panel {
+      flex: 1;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(255,255,255,0.5);
+    }
+    .form-header { margin-bottom: 28px; }
+    .form-title {
+      font-family: var(--font-brand);
+      font-size: 24px; font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .form-subtitle { font-size: 14px; color: var(--text-muted); }
+    .form-subtitle a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
+    .form-subtitle a:hover { text-decoration: underline; }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex; gap: 0; margin-bottom: 24px;
+      border: 1px solid var(--bg-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .auth-tab {
+      flex: 1; padding: 10px 0; text-align: center;
+      font-size: 13.5px; font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none; cursor: pointer;
+      transition: background var(--trs), color var(--trs);
+      font-family: var(--font-main);
+    }
+    .auth-tab.active {
+      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+      color: #fff;
+    }
+    .auth-tab:not(.active):hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+    }
+
+    /* Form */
+    .auth-form { display: flex; flex-direction: column; gap: 16px; }
+    .auth-form.hidden { display: none; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 12.5px; font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .form-input {
+      width: 100%; padding: 11px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 14px; font-family: var(--font-main);
+      outline: none;
+      transition: border-color var(--trs), box-shadow var(--trs);
+    }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px var(--accent-blue-glow);
+    }
+
+    .form-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .form-check {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--text-muted);
+      cursor: pointer;
+    }
+    .form-check input[type="checkbox"] {
+      width: 16px; height: 16px;
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+    }
+    .form-link {
+      font-size: 13px; color: var(--accent-blue);
+      text-decoration: none; font-weight: 500;
+    }
+    .form-link:hover { text-decoration: underline; }
+
+    .btn-login {
+      width: 100%; padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14.5px; font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+      border: none; color: #fff; cursor: pointer;
+      font-family: var(--font-main);
+      box-shadow: var(--shadow-glow-blue);
+      transition: transform var(--trs), filter var(--trs), box-shadow var(--trs);
+      letter-spacing: 0.3px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-login:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+      box-shadow: 0 8px 32px rgba(59,130,246,0.45);
+    }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login.loading {
+      pointer-events: none; opacity: 0.8;
+    }
+    .btn-login.loading .btn-text { visibility: hidden; }
+    .btn-login.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 4px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--bg-border);
+    }
+    .divider span { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+    /* Social buttons */
+    .social-btns { display: flex; gap: 10px; }
+    .btn-social {
+      flex: 1; padding: 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-input);
+      border: 1px solid var(--bg-border);
+      color: var(--text-secondary);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background var(--trs), border-color var(--trs), color var(--trs);
+      font-family: var(--font-main);
+    }
+    .btn-social:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text-primary);
+    }
+    .btn-social .social-icon { font-size: 16px; }
+
+    /* Error / success toast */
+    .login-toast {
+      position: fixed; top: 20px; right: 20px;
+      padding: 12px 18px; border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      display: none; align-items: center; gap: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 100;
+      animation: slideInRight 0.3s ease;
+    }
+    .login-toast.show { display: flex; }
+    .login-toast.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; }
+    .login-toast.success { background: rgba(16,185,129,0.15); border: 1px solid var(--accent-green); }
+    @keyframes slideInRight { from { transform: translateX(60px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+
+    /* Footer */
+    .login-footer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      text-align: center; padding: 12px;
+      font-size: 11.5px; color: var(--text-muted);
+      z-index: 5;
+    }
+    .login-footer a { color: var(--text-muted); text-decoration: none; }
+    .login-footer a:hover { color: var(--accent-blue); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .login-brand { display: none; }
+      .login-container { width: 94vw; min-height: auto; border-radius: 16px; }
+      .login-form-panel { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-grid"></div>
+
+<!-- Floating Particles (injected by JS) -->
+<div id="particles"></div>
+
+<!-- Toast -->
+<div class="login-toast" id="loginToast">
+  <span id="toastIcon"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- Login Container -->
+<div class="login-container">
+
+  <!-- Left: Branding -->
+  <div class="login-brand">
+    <div class="brand-top">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">A</div>
+        <div class="brand-logo-text">Axia Finance</div>
+      </div>
+      <h1 class="brand-headline">AI-Powered<br/>Finance for the<br/>Modern Era</h1>
+      <p class="brand-subtitle">Track spending, optimize budgets, and grow your wealth — all guided by intelligent AI insights.</p>
+
+      <div class="brand-features">
+        <div class="brand-feature">
+          <div class="feature-icon fi-blue">✦</div>
+          <div class="feature-text"><strong>AI Insights</strong> — Smart categorization &amp; predictions</div>
+        </div>
+        <div class="brand-feature">
+          <div class="feature-icon fi-green">🛡️</div>
+          <div class="feature-text"><strong>Bank-grade Security</strong> — End-to-end encrypted</div>
+        </div>
+        <div class="brand-feature">
+          <div class="feature-icon fi-purple">📊</div>
+          <div class="feature-text"><strong>Real-time Analytics</strong> — Budgets, goals &amp; more</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-bottom">
+      Axia Finance © 2026 — Trusted by 50,000+ users
+    </div>
+  </div>
+
+  <!-- Right: Form -->
+  <div class="login-form-panel">
+    <div class="form-header">
+      <div class="form-title" id="formTitle">Welcome back 👋</div>
+      <div class="form-subtitle" id="formSubtitle">
+        Sign in to continue to your dashboard.
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" data-tab="login">Sign In</button>
+      <button class="auth-tab" id="tabRegister" data-tab="register">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form" id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" class="form-input" placeholder="alex@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+      </div>
+      <div class="form-row">
+        <label class="form-check">
+          <input type="checkbox" checked /> Remember me
+        </label>
+        <a href="#" class="form-link">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn-login" id="btnLogin">
+        <span class="btn-text">Sign In →</span>
+      </button>
+      <div class="divider"><span>or continue with</span></div>
+      <div class="social-btns">
+        <button type="button" class="btn-social"><span class="social-icon">G</span> Google</button>
+        <button type="button" class="btn-social"><span class="social-icon">🍎</span> Apple</button>
+      </div>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form class="auth-form hidden" id="registerForm" autocomplete="off">
+      <div class="form-group">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" class="form-input" placeholder="Alex R." required />
+      </div>
+      <div class="form-group">
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail" class="form-input" placeholder="alex@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" class="form-input" placeholder="Minimum 6 characters" required minlength="6" />
+      </div>
+      <button type="submit" class="btn-login" id="btnRegister">
+        <span class="btn-text">Create Account →</span>
+      </button>
+      <div class="divider"><span>or sign up with</span></div>
+      <div class="social-btns">
+        <button type="button" class="btn-social"><span class="social-icon">G</span> Google</button>
+        <button type="button" class="btn-social"><span class="social-icon">🍎</span> Apple</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="login-footer">
+  Axia Finance © 2026 &nbsp;|&nbsp; <a href="#">Privacy</a> &nbsp;|&nbsp; <a href="#">Terms</a> &nbsp;|&nbsp; <a href="#">Security Center</a>
+</footer>
+
+<script>
+  const API = 'http://localhost:5000/api';
+
+  /* ── Particles ── */
+  (function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 4 + 2;
+      const colors = ['rgba(59,130,246,0.4)', 'rgba(16,185,129,0.4)', 'rgba(34,211,238,0.3)', 'rgba(139,92,246,0.3)'];
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random() * 100}%;
+        background:${colors[Math.floor(Math.random() * colors.length)]};
+        animation-duration:${Math.random() * 15 + 10}s;
+        animation-delay:${Math.random() * 10}s;
+      `;
+      container.appendChild(p);
+    }
+  })();
+
+  /* ── Auth Tabs ── */
+  const tabLogin = document.getElementById('tabLogin');
+  const tabRegister = document.getElementById('tabRegister');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const formTitle = document.getElementById('formTitle');
+  const formSubtitle = document.getElementById('formSubtitle');
+
+  tabLogin.addEventListener('click', () => switchTab('login'));
+  tabRegister.addEventListener('click', () => switchTab('register'));
+
+  function switchTab(tab) {
+    tabLogin.classList.toggle('active', tab === 'login');
+    tabRegister.classList.toggle('active', tab === 'register');
+    loginForm.classList.toggle('hidden', tab !== 'login');
+    registerForm.classList.toggle('hidden', tab !== 'register');
+    if (tab === 'login') {
+      formTitle.textContent = 'Welcome back 👋';
+      formSubtitle.innerHTML = 'Sign in to continue to your dashboard.';
+    } else {
+      formTitle.textContent = 'Get Started 🚀';
+      formSubtitle.innerHTML = 'Create a free account to start tracking your finances.';
+    }
+  }
+
+  /* ── Toast ── */
+  function showToast(msg, type) {
+    const toast = document.getElementById('loginToast');
+    const icon = document.getElementById('toastIcon');
+    const text = document.getElementById('toastMsg');
+    toast.className = 'login-toast show ' + type;
+    icon.textContent = type === 'success' ? '✅' : '❌';
+    text.textContent = msg;
+    setTimeout(() => { toast.classList.remove('show'); }, 3500);
+  }
+
+  /* ── Loading state ── */
+  function setLoading(btn, loading) {
+    btn.classList.toggle('loading', loading);
+  }
+
+  /* ── Login ── */
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('btnLogin');
+
+    if (!email || !password) { showToast('Please fill all fields.', 'error'); return; }
+
+    setLoading(btn, true);
+
+    try {
+      const res = await fetch(API + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('axia_token', data.token);
+        localStorage.setItem('axia_user', JSON.stringify(data.user));
+        showToast('Login successful! Redirecting...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+      } else {
+        showToast(data.msg || 'Invalid credentials.', 'error');
+      }
+    } catch (err) {
+      showToast('Cannot connect to server.', 'error');
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+
+  /* ── Register ── */
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const btn = document.getElementById('btnRegister');
+
+    if (!name || !email || !password) { showToast('Please fill all fields.', 'error'); return; }
+    if (password.length < 6) { showToast('Password must be at least 6 characters.', 'error'); return; }
+
+    setLoading(btn, true);
+
+    try {
+      const res = await fetch(API + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('axia_token', data.token);
+        localStorage.setItem('axia_user', JSON.stringify(data.user));
+        showToast('Account created! Redirecting...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+      } else {
+        showToast(data.msg || 'Registration failed.', 'error');
+      }
+    } catch (err) {
+      showToast('Cannot connect to server.', 'error');
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+
+  /* ── Check if already logged in ── */
+  if (localStorage.getItem('axia_token')) {
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>
